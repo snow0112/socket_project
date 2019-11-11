@@ -58,9 +58,20 @@ int main(void)
         printf("connect to A\n");
         char *message = "Hello Server";
         sendto(A_sockfd, message, 1000, 0, (struct sockaddr*)NULL, sizeof(A_servaddr));
-
-
         close(A_sockfd);
+
+        bzero(&B_servaddr, sizeof(B_servaddr)); 
+        B_servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
+        B_servaddr.sin_port = htons(PORTB); 
+        B_servaddr.sin_family = AF_INET;
+        B_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+        connect( B_sockfd, (struct sockaddr *) &B_servaddr, sizeof(B_servaddr) );
+        printf("connect to B\n");
+        char *message2 = "Hi Server B";
+        sendto(B_sockfd, message2, 1000, 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
+        close(B_sockfd);
+
+
     }
 	
 }
