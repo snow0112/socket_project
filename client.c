@@ -34,6 +34,10 @@ int main(void)
     servaddr.sin_port = htons(PORT); 
 
     int cn = connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
+    if (cn == -1) {
+        printf("connection failed\n");
+        exit(0); 
+    }
     printf("[+]Connected to Server.\n");
 
     close(sockfd); 

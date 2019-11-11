@@ -12,8 +12,11 @@
 #include <sys/wait.h>
 #include <signal.h>
 #define PORT 24539 // TCP port for student id 2178884539
-#define BACKLOG 20
+#define PORTA 21539
+#define PORTB 22539
+#define PORTUDP 23539 // UDP port for student id 2178884539
 
+#define BACKLOG 2
 
 int main(void)
 {
@@ -42,7 +45,9 @@ int main(void)
     listen(parent_sockfd, BACKLOG);
     printf("[+]Listening...\n");
 
-    child_sockfd = accept(parent_sockfd, (struct sockaddr*)&clientaddr, &len);
-    printf("received\n");
+    while(1){
+    	child_sockfd = accept(parent_sockfd, (struct sockaddr*)&clientaddr, &len);
+    	printf("received\n");
+    }
 	
 }
