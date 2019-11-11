@@ -21,9 +21,9 @@
 int main(void)
 {
 	// reference : geeksforgeeks TCP Server-Client implementation in C
-	int parent_sockfd, child_sockfd;
-	struct sockaddr_in servaddr, clientaddr;
-	socklen_t len;
+	int parent_sockfd, child_sockfd, A_sockfd, B_sockfd;
+	struct sockaddr_in servaddr, clientaddr, A_servaddr, B_servaddr;
+	socklen_t len, A_len, B_len;
 
 	// socket create and verification 
     parent_sockfd = socket(AF_INET, SOCK_STREAM, 0); 
@@ -48,6 +48,19 @@ int main(void)
     while(1){
     	child_sockfd = accept(parent_sockfd, (struct sockaddr*)&clientaddr, &len);
     	printf("received\n");
+
+        bzero(&A_servaddr, sizeof(A_servaddr)); 
+        A_servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
+        A_servaddr.sin_port = htons(PORTA); 
+        A_servaddr.sin_family = AF_INET;
+        A_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+        connect( A_sockfd, (struct sockaddr *) &A_servaddr, sizeof(A_servaddr) );
+        printf("connect to A\n");
+        char *message = "Hello Server";
+        sendto(A_sockfd, message, 1000, 0, (struct sockaddr*)NULL, sizeof(A_servaddr));
+
+
+        close(A_sockfd);
     }
 	
 }
