@@ -24,6 +24,7 @@ int main(void)
 	int parent_sockfd, child_sockfd, A_sockfd, B_sockfd;
 	struct sockaddr_in servaddr, clientaddr, A_servaddr, B_servaddr;
 	socklen_t len, A_len, B_len;
+    char buffer[1024];
     char bufferA[1024];
     char bufferB[1024];
 
@@ -50,6 +51,9 @@ int main(void)
     while(1){
     	child_sockfd = accept(parent_sockfd, (struct sockaddr*)&clientaddr, &len);
     	printf("received\n");
+        strcpy(buffer, "AWS responding");
+        send(child_sockfd, buffer, strlen(buffer), 0);
+
 
         bzero(&A_servaddr, sizeof(A_servaddr)); 
         A_servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
@@ -76,6 +80,9 @@ int main(void)
         recvfrom(B_sockfd, bufferB, sizeof(bufferB), 0, (struct sockaddr*)NULL, NULL); 
         puts(bufferB); 
         close(B_sockfd);
+
+        printf("[+]Closing the connection.\n");
+        close(child_sockfd);
 
 
     }
