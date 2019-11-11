@@ -13,8 +13,10 @@
 #include <signal.h>
 #define PORT 24539 // TCP port for student id 2178884539
 
-int main(void)
+int main(int argc, char* argv[])
 {
+    printf("The client is up and running.\n");
+
 	// reference : geeksforgeeks TCP Server-Client implementation in C
 	int sockfd;
 	struct sockaddr_in servaddr;
@@ -34,16 +36,21 @@ int main(void)
     servaddr.sin_port = htons(PORT); 
 
     int cn = connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-    if (cn == -1) {
-        printf("connection failed\n");
-        exit(0); 
-    }
-    printf("[+]Connected to Server.\n");
+    if (cn == -1) exit(0); 
+
+    printf("The client has sent query to AWS using TCP over port 24539; ");
+    printf("start vertex %s; ",argv[2]);
+    printf("map %s; ",argv[1]);
+    printf("file size %s.\n", argv[3]);
 
     char buffer[1024];
     recv(sockfd, buffer, 1024, 0);
-    printf("[+]Data Recv: %s\n", buffer);
-    printf("[+]Closing the connection.\n");
+    printf("The client has received results from AWS:\n");
+    printf("%s\n","----------------------------------------------");
+    printf("%s\n","Destination    Min Length    Tt    Tp    Delay");
+    printf("%s\n","----------------------------------------------");
+    puts(buffer);
+    printf("%s\n","----------------------------------------------");
     close(sockfd); 
 
 	
