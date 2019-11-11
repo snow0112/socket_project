@@ -27,8 +27,14 @@ int main(){
   len = sizeof(clientaddr);
 
   char buffer[1024];
-  recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*) &clientaddr, &len);
-  buffer[1023] = '\0';
-  printf("[+]Data Received: %s \n", buffer);
+  while(1){
+    int n = recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*) &clientaddr, &len);
+    buffer[n] = '\0';
+    printf("[+]Data Received: %s \n", buffer);
+    puts(buffer);
+    char *message = "Here is A responding";
+    sendto(sockfd, message, 1024, 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+
+  }
 
 }

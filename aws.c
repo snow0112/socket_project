@@ -24,6 +24,8 @@ int main(void)
 	int parent_sockfd, child_sockfd, A_sockfd, B_sockfd;
 	struct sockaddr_in servaddr, clientaddr, A_servaddr, B_servaddr;
 	socklen_t len, A_len, B_len;
+    char bufferA[1024];
+    char bufferB[1024];
 
 	// socket create and verification 
     parent_sockfd = socket(AF_INET, SOCK_STREAM, 0); 
@@ -58,6 +60,8 @@ int main(void)
         printf("connect to A\n");
         char *message = "Hello Server";
         sendto(A_sockfd, message, 1000, 0, (struct sockaddr*)NULL, sizeof(A_servaddr));
+        recvfrom(A_sockfd, bufferA, sizeof(bufferA), 0, (struct sockaddr*)NULL, NULL); 
+        puts(bufferA); 
         close(A_sockfd);
 
         bzero(&B_servaddr, sizeof(B_servaddr)); 
@@ -69,6 +73,8 @@ int main(void)
         printf("connect to B\n");
         char *message2 = "Hi Server B";
         sendto(B_sockfd, message2, 1000, 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
+        recvfrom(B_sockfd, bufferB, sizeof(bufferB), 0, (struct sockaddr*)NULL, NULL); 
+        puts(bufferB); 
         close(B_sockfd);
 
 
