@@ -27,8 +27,7 @@ int main(void)
     char bufferA[1024]; // for saving the result form server A
     char bufferB[1024]; // for saving the result form server B
     char mapID[1024];
-    char source[1024];
-    char filesize[1024];
+    int source, filesize;
 
 	// socket create and verification 
     parent_sockfd = socket(AF_INET, SOCK_STREAM, 0); 
@@ -47,13 +46,12 @@ int main(void)
     while(1){
 
     	child_sockfd = accept(parent_sockfd, (struct sockaddr*) &clientaddr, &len);
-        int len_mapID = recv(child_sockfd, mapID, 1024, 0);
-        int len_source = recv(child_sockfd, source, 1024, 0);
-        int len_filesize = recv(child_sockfd, filesize, 1024, 0);
+        recv(child_sockfd, mapID, 1024, 0);
+        recv(child_sockfd, &source, sizeof(source), 0);
+        recv(child_sockfd, &filesize, sizeof(filesize), 0);
         printf("The AWS has received map ID %s, ",mapID);
-        printf("start vertex %s, ",source);
-        printf(" and file size %s", filesize);
-        printf(" from the client using TCP over port 24539.\n");
+        printf("start vertex %d, ",source);
+        printf("and file size %d from the client using TCP over port 24539.\n", filesize);
 
         bzero(&A_servaddr, sizeof(A_servaddr)); 
         A_servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
@@ -97,7 +95,6 @@ int main(void)
         send(child_sockfd, buffer, strlen(buffer), 0);
         printf("%s\n", "The AWS has sent calculated delay to client using TCP over port 24539.");
         close(child_sockfd);
-
 
     }
 	
