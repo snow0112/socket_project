@@ -59,9 +59,10 @@ int main(void)
         A_servaddr.sin_family = AF_INET;
         A_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
         connect( A_sockfd, (struct sockaddr *) &A_servaddr, sizeof(A_servaddr) );
-        printf("connect to A\n");
-        char *message = "Hello Server";
-        sendto(A_sockfd, message, 1000, 0, (struct sockaddr*)NULL, sizeof(A_servaddr));
+
+        sendto(A_sockfd, mapID, 1024, 0, (struct sockaddr*)NULL, sizeof(A_servaddr));
+        sendto(A_sockfd, &source, sizeof(source), 0, (struct sockaddr*)NULL, sizeof(A_servaddr));
+
         printf("%s\n","The AWS has sent map ID and starting vertex to server A using UDP over port 21539.");
         recvfrom(A_sockfd, bufferA, sizeof(bufferA), 0, (struct sockaddr*)NULL, NULL); 
         printf("%s\n", "The AWS has received shortest path from server A:");
