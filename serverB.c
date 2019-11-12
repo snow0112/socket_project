@@ -13,6 +13,8 @@
 #define PORT 22539
 
 int main(){
+
+  printf("The Server B is up and running using UDP on port 22539\n");
 	int sockfd;
 	struct sockaddr_in servaddr, clientaddr;
 	socklen_t len;
@@ -29,12 +31,26 @@ int main(){
   char buffer[1024];
   while(1){
   	recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*) &clientaddr, &len);
-  	buffer[1023] = '\0';
-  	printf("[+]Data Received: %s \n", buffer);
+  	buffer[1024] = '\0';
+  	printf("The Server B has received data for calculation:\n");
+    printf("* Propagation speed: %.2f km/s; \n", 1.1);
+    printf("* Transmission speed %.2f Bytes/s; \n", 2.2 );
+    printf("* Path length for destination %d: %d;\n",0,1);
   	puts(buffer);
+    // calculate delay
+
+    printf("The Server B has finished the calculation of the delays:\n");
+    printf("------------------------\n");
+    printf("Destination        Delay\n");
+    printf("------------------------\n");
+    printf("------------------------\n");
+
     char *message = "Here is B responding";
     sendto(sockfd, message, 1024, 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+    printf("The Server B has finished sending the output to AWS\n");
 
   }
 
 }
+
+
