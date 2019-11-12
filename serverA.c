@@ -24,7 +24,7 @@ typedef struct tagmap {
 
 typedef struct Node{
     Map* m;
-    struct Node *next;
+    //struct Node *next;
 } Node;
 
 void initNode(Node* node){
@@ -53,11 +53,16 @@ int main(){
 
   // construct map
   int mapcount = 0;
-  Node head;
-  initNode(&head);
+  Node maps[100];
+  //initNode(&maps[0]);
+  //Node head;
+  //head = maps[0];
+  //Node iter = maps[0];
   //printf("%d\n", *(&head.m->vertex_number));
   //memset(&head, 0, sizeof(Node));
-  Node iter = head;
+  Node iter;
+
+
 
   FILE* fp;
   char filebuff[1024];
@@ -65,10 +70,12 @@ int main(){
   while (fgets(filebuff, sizeof(filebuff), fp) != NULL) {
     if (filebuff[0] - '0' < 0 || filebuff[0] - '0' > 8) {
       mapcount++;
-      Node next;
-      initNode(&next);
-      *&iter.next = &next;
-      iter = next;
+      initNode(&maps[mapcount-1]);
+      iter = maps[mapcount-1];
+      //initNode(&next);
+      //*&iter.next = &next;
+      //iter = next;
+      filebuff[1] = '\0';
       strcpy(*(&iter.m->mapID), filebuff);
     }
     else if ( (*(&iter.m->edge_number)) == -2 )
@@ -135,11 +142,17 @@ int main(){
   printf("%s\n", "-------------------------------------------");
   char* pmapbuff[45];
   pmapbuff[44] = '\0';
-  //iter = **(&head.next);
   for (int i = 0; i < mapcount; i++){
-    //iter = **(&iter.next);
-    printf("%s\n", *(&iter.m->mapID));
+    iter = maps[i];
     for (int j = 0; j < 44; j++) pmapbuff[j] = " ";
+    pmapbuff[0] = *(&iter.m->mapID);
+    //snprintf(pmapbuff, 10, "%d", *(&iter.m->vertex_number));
+    printf("%s\n", *pmapbuff);
+
+
+    printf("%s       ", *(&iter.m->mapID));
+    printf("%d        ", *(&iter.m->vertex_number));
+    printf("%d\n", *(&iter.m->edge_number));
   }
   printf("%s\n", "-------------------------------------------");
 
