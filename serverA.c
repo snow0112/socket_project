@@ -51,19 +51,10 @@ int main(){
 
   printf("%s\n","The Server A is up and running using UDP on port 21539" );
 
-  // construct map
   int mapcount = 0;
   Node maps[100];
-  //initNode(&maps[0]);
-  //Node head;
-  //head = maps[0];
-  //Node iter = maps[0];
-  //printf("%d\n", *(&head.m->vertex_number));
-  //memset(&head, 0, sizeof(Node));
+  initNode(&maps[0]);
   Node iter;
-
-
-
   FILE* fp;
   char filebuff[1024];
   fp = fopen("map.txt", "r");
@@ -72,9 +63,6 @@ int main(){
       mapcount++;
       initNode(&maps[mapcount-1]);
       iter = maps[mapcount-1];
-      //initNode(&next);
-      //*&iter.next = &next;
-      //iter = next;
       filebuff[1] = '\0';
       strcpy(*(&iter.m->mapID), filebuff);
     }
@@ -83,21 +71,20 @@ int main(){
     else if ( (*(&iter.m->edge_number)) == -1 )
       (*(&iter.m->transmission)) = atof(filebuff);
     else{
-      //puts(filebuff);
+      
       int v1, v2, w;
       char *start_ptr = filebuff;
       char *tab_ptr = strchr(start_ptr,' ');
       if (tab_ptr != NULL) *tab_ptr++ = '\0';
       v1 = atoi(start_ptr);
-      //printf("[+] v1, %d\n", v1);
+      
       start_ptr = tab_ptr;
       tab_ptr = strchr(start_ptr,' ');
       if (tab_ptr != NULL) *tab_ptr++ = '\0';
       v2 = atoi(start_ptr);
-      //printf("[+] v2, %d\n", v2);
+
       start_ptr = tab_ptr;
       w = atoi(start_ptr);
-      //printf("[+] w, %d\n", w);
 
       // find index of v1 and v2
       int idx1 = 9;
@@ -129,10 +116,6 @@ int main(){
       (*(&iter.m->adja[idx2][idx1])) = w;
     }
     (*(&iter.m->edge_number))++;
-    //puts(filebuff);
-    //printf("[+] vertes number, %d\n", *(&iter.m->vertex_number));
-    //printf("[+] propogation, %.2f\n", *(&iter.m->propogation));
-    //printf("[+] transmission, %.2f\n", *(&iter.m->transmission));
   }
   fclose(fp);
 
@@ -140,33 +123,8 @@ int main(){
   printf("%s\n", "-------------------------------------------");
   printf("%s\n", "Map ID  Num Vertices  Num Edges");
   printf("%s\n", "-------------------------------------------");
-
-  //char pmapbuff[45];
-
   for (int i = 0; i < mapcount; i++){
     iter = maps[i];
-    /*
-    strcpy(pmapbuff, *(&iter.m->mapID));
-    for (int j = 1; j < 44; j++) pmapbuff[j] = ' ';
-    //char* start = pmapbuff + 9;
-    //snprintf( start, 10, "%d", *(&iter.m->vertex_number) );
-    char buf[4];
-    snprintf( buf, 4, "%d", *(&iter.m->vertex_number) );
-    for (int j = 0; j < 3; j++){
-      if (buf[j] == '\0') break;
-      pmapbuff[8+i] = buf[i];
-      //printf("%s\n", pmapbuff+7);
-    }
-    snprintf( buf, 4, "%d", *(&iter.m->edge_number) );
-    for (int j = 0; j < 3; j++){
-      if (buf[j] == '\0') break;
-      pmapbuff[22+i] = buf[i];
-    }
-
-    pmapbuff[44] = '\0';
-    */
-
-    //printf("%s\n", pmapbuff);
     printf("%-8s", *(&iter.m->mapID));
     printf("%-14d", *(&iter.m->vertex_number));
     printf("%d\n", *(&iter.m->edge_number));
@@ -190,7 +148,7 @@ int main(){
   char mapID[10];
   int source;  
   while(1){
-    break;
+    
     int n = recvfrom(sockfd, mapID, 1024, 0, (struct sockaddr*) &clientaddr, &len);
     mapID[n] = '\0';
     recvfrom(sockfd, &source, sizeof(source), 0, (struct sockaddr*) &clientaddr, &len);
