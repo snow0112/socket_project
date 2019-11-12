@@ -140,18 +140,35 @@ int main(){
   printf("%s\n", "-------------------------------------------");
   printf("%s\n", "Map ID  Num Vertices  Num Edges");
   printf("%s\n", "-------------------------------------------");
-  char* pmapbuff[45];
-  pmapbuff[44] = '\0';
+
+  //char pmapbuff[45];
+
   for (int i = 0; i < mapcount; i++){
     iter = maps[i];
-    for (int j = 0; j < 44; j++) pmapbuff[j] = " ";
-    pmapbuff[0] = *(&iter.m->mapID);
-    //snprintf(pmapbuff, 10, "%d", *(&iter.m->vertex_number));
-    printf("%s\n", *pmapbuff);
+    /*
+    strcpy(pmapbuff, *(&iter.m->mapID));
+    for (int j = 1; j < 44; j++) pmapbuff[j] = ' ';
+    //char* start = pmapbuff + 9;
+    //snprintf( start, 10, "%d", *(&iter.m->vertex_number) );
+    char buf[4];
+    snprintf( buf, 4, "%d", *(&iter.m->vertex_number) );
+    for (int j = 0; j < 3; j++){
+      if (buf[j] == '\0') break;
+      pmapbuff[8+i] = buf[i];
+      //printf("%s\n", pmapbuff+7);
+    }
+    snprintf( buf, 4, "%d", *(&iter.m->edge_number) );
+    for (int j = 0; j < 3; j++){
+      if (buf[j] == '\0') break;
+      pmapbuff[22+i] = buf[i];
+    }
 
+    pmapbuff[44] = '\0';
+    */
 
-    printf("%s       ", *(&iter.m->mapID));
-    printf("%d        ", *(&iter.m->vertex_number));
+    //printf("%s\n", pmapbuff);
+    printf("%-8s", *(&iter.m->mapID));
+    printf("%-14d", *(&iter.m->vertex_number));
     printf("%d\n", *(&iter.m->edge_number));
   }
   printf("%s\n", "-------------------------------------------");
@@ -170,7 +187,7 @@ int main(){
   len = sizeof(clientaddr);
 
   char buffer[1024]; // for sending back to aws
-  char mapID[1024];
+  char mapID[10];
   int source;  
   while(1){
     break;
