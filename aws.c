@@ -24,8 +24,11 @@ int main(void)
 	struct sockaddr_in servaddr, clientaddr, A_servaddr, B_servaddr;
 	socklen_t len, A_len, B_len;
     char buffer[1024]; // for sending result to client
-    char bufferA[1024];
-    char bufferB[1024];
+    char bufferA[1024]; // for saving the result form server A
+    char bufferB[1024]; // for saving the result form server B
+    char mapID[1024];
+    char source[1024];
+    char filesize[1024];
 
 	// socket create and verification 
     parent_sockfd = socket(AF_INET, SOCK_STREAM, 0); 
@@ -39,14 +42,17 @@ int main(void)
 
     int bd = bind(parent_sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
     //printf("[+]Bind to Port number %d.\n", PORT);
-    listen(parent_sockfd, 2);
+    listen(parent_sockfd, 3);
     printf("The AWS is up and running.\n"); // only while starting
     while(1){
 
     	child_sockfd = accept(parent_sockfd, (struct sockaddr*) &clientaddr, &len);
-        //printf("The AWS has received map ID %s, ",argv[1]);
-        //printf("start vertex %s, ",argv[2]);
-        //printf(" and file size %s.\n", argv[3]);
+        int len_mapID = recv(child_sockfd, mapID, 1024, 0);
+        int len_source = recv(child_sockfd, source, 1024, 0);
+        int len_filesize = recv(child_sockfd, filesize, 1024, 0);
+        printf("The AWS has received map ID %s, ",mapID);
+        printf("start vertex %s, ",source);
+        printf(" and file size %s", filesize);
         printf(" from the client using TCP over port 24539.\n");
 
         bzero(&A_servaddr, sizeof(A_servaddr)); 
