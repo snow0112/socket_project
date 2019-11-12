@@ -51,6 +51,8 @@ int main(){
 
   printf("%s\n","The Server A is up and running using UDP on port 21539" );
 
+  // read file
+
   int mapcount = 0;
   Node maps[100];
   initNode(&maps[0]);
@@ -154,6 +156,21 @@ int main(){
     recvfrom(sockfd, &source, sizeof(source), 0, (struct sockaddr*) &clientaddr, &len);
     printf("The Server A has received input for finding shortest paths: starting vertex %d ", source);
     printf("of map %s.\n", mapID);
+
+    Map* targetmap;
+
+    // find map
+    for (int i = 0; i < mapcount; i++){
+      iter = maps[i];
+      //printf("%s\n",mapID );
+      //printf("%s\n",*(&iter.m->mapID) );
+      if (mapID[0] == *(&iter.m->mapID)[0]){
+        //printf("got map %s\n",mapID);
+        targetmap = *(&iter.m);
+        //printf("%s\n",*(&targetmap->mapID) );
+        break;
+      }
+    }
 
     // dijkstra
 

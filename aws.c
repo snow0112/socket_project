@@ -47,6 +47,7 @@ int main(void)
 
     	child_sockfd = accept(parent_sockfd, (struct sockaddr*) &clientaddr, &len);
         recv(child_sockfd, mapID, 1024, 0);
+        mapID[1] = '\0';
         recv(child_sockfd, &source, sizeof(source), 0);
         recv(child_sockfd, &filesize, sizeof(filesize), 0);
         printf("The AWS has received map ID %s, ",mapID);
