@@ -32,7 +32,9 @@
 	serverB -> aws :
 		transimission delay, propogation delays, end to end delays: double
 	aws -> client :
-		
+		vertex number, destinations, length of paths: int
+		transimission delay, propogation delays, end to end delays: double 
+
 5. Any idiosyncrasy of your project. It should say under what conditions the project fails, if any.
 	No specific condition.
 
