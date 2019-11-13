@@ -61,7 +61,7 @@ int main(){
   char filebuff[1024];
   fp = fopen("map.txt", "r");
   while (fgets(filebuff, sizeof(filebuff), fp) != NULL) {
-    if (filebuff[0] - '0' < 0 || filebuff[0] - '0' > 8) {
+    if (filebuff[0] - '0' < 0 || filebuff[0] - '0' > 9) {
       mapcount++;
       initNode(&maps[mapcount-1]);
       iter = maps[mapcount-1];
@@ -158,7 +158,6 @@ int main(){
     printf("of map %s.\n", mapID);
 
     Map* targetmap;
-
     // find map
     for (int i = 0; i < mapcount; i++){
       iter = maps[i];
@@ -171,8 +170,20 @@ int main(){
         break;
       }
     }
-
+    // find source index
+    int sidx = -1;
+    for (int i = 0; i < *(&targetmap->vertex_number); i++){
+      //printf("%d,%d\n", i, *(&targetmap->vertrx_sequence[i] ) );
+      if ( *(&targetmap->vertrx_sequence[i]) == source ){
+        sidx = i;
+        //printf("%d\n",sidx );
+        break;
+      }
+    }
     // dijkstra
+    int paths[*(&targetmap->vertex_number)][2]; // destination(index), path length
+
+
 
     printf("%s\n", "The Server A has identified the following shortest paths:");
     printf("%s\n", "-----------------------------");
