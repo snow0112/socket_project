@@ -28,7 +28,7 @@ int main(void)
     char bufferB[1024]; // for saving the result form server B
     char mapID[10];
     int source;
-    long filesize;
+    char filesize[1024];
 
 	// socket create and verification 
     parent_sockfd = socket(AF_INET, SOCK_STREAM, 0); 
@@ -54,7 +54,7 @@ int main(void)
         recv(child_sockfd, &filesize, sizeof(filesize), 0);
         printf("The AWS has received map ID %s, ",mapID);
         printf("start vertex %d, ",source);
-        printf("and file size %ld from the client using TCP over port 24539.\n", filesize);
+        printf("and file size %s from the client using TCP over port 24539.\n", filesize);
 
         // talk to server A
         bzero(&A_servaddr, sizeof(A_servaddr)); 
@@ -76,9 +76,9 @@ int main(void)
         recvfrom(A_sockfd, &propagation, sizeof(double), 0, (struct sockaddr*)NULL, NULL);
         recvfrom(A_sockfd, &transmission, sizeof(double), 0, (struct sockaddr*)NULL, NULL);
         recvfrom(A_sockfd, &m, sizeof(int), 0, (struct sockaddr*)NULL, NULL);
-        printf("%f\n",propagation );
-        printf("%f\n",transmission );
-        printf("%d\n",m );
+        //printf("%f\n",propagation );
+        //printf("%f\n",transmission );
+        //printf("%d\n",m );
         for(int i = 0; i < m-1; i++){
             recvfrom(A_sockfd, &paths[i][0], sizeof(int), 0, (struct sockaddr*)NULL, NULL);
             recvfrom(A_sockfd, &paths[i][1], sizeof(int), 0, (struct sockaddr*)NULL, NULL);
@@ -102,8 +102,8 @@ int main(void)
         B_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
         connect( B_sockfd, (struct sockaddr *) &B_servaddr, sizeof(B_servaddr) );
-        
-        sendto(B_sockfd, &filesize, sizeof(long), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
+
+        sendto(B_sockfd, &filesize, sizeof(filesize), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
         sendto(B_sockfd, &propagation, sizeof(double), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
         sendto(B_sockfd, &transmission, sizeof(double), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
         sendto(B_sockfd, &m, sizeof(int), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));

@@ -19,11 +19,13 @@ int main(int argc, char* argv[])
 
 	// reference : geeksforgeeks TCP Server-Client implementation in C
 	int sockfd, source;
-    long filesize;
+    //char filesize[1024];
 	struct sockaddr_in servaddr;
     source = atoi(argv[2]);
-    filesize = atol(argv[3]);
+    //filesize = atol(argv[3]);
     //printf("%d\n", filesize);
+    char filesize[1024];
+    strcpy(filesize, argv[3]);
 
 	// socket create and verification 
     sockfd = socket(AF_INET, SOCK_STREAM, 0); 
@@ -38,8 +40,8 @@ int main(int argc, char* argv[])
     int cn = connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
     if (cn == -1) exit(0); 
     send(sockfd, argv[1], strlen(argv[1]), 0);
-    send(sockfd, &source, sizeof(source), 0);
-    send(sockfd, &filesize, sizeof(filesize), 0);
+    send(sockfd, &source, sizeof(int), 0);
+    send(sockfd, filesize, sizeof(filesize), 0);
 
     printf("The client has sent query to AWS using TCP over port 24539; ");
     printf("start vertex %s; ",argv[2]);

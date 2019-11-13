@@ -33,12 +33,12 @@ int main(){
   	//recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*) &clientaddr, &len);
   	//buffer[1024] = '\0';
 
-    long filesize;
+    char filesize[1024];
     double propagation;
     double transmission;
     int m; // vertex number
     int paths[10][2];
-    recvfrom(sockfd, &filesize, sizeof(long), 0, (struct sockaddr*) &clientaddr, &len);
+    recvfrom(sockfd, &filesize, sizeof(filesize), 0, (struct sockaddr*) &clientaddr, &len);
     recvfrom(sockfd, &propagation, sizeof(double), 0, (struct sockaddr*) &clientaddr, &len);
     recvfrom(sockfd, &transmission, sizeof(double), 0, (struct sockaddr*) &clientaddr, &len);
     recvfrom(sockfd, &m, sizeof(int), 0, (struct sockaddr*) &clientaddr, &len);
@@ -55,7 +55,10 @@ int main(){
     //printf("* Path length for destination %d: %d;\n",0,1);
   	//puts(buffer);
     // calculate delay
-    double Tt = ((double)filesize/transmission);
+    long size = atol(filesize);
+    printf("filesize: %s\n",filesize );
+    printf("filesize: %ld\n",size );
+    double Tt = ((double)0.0/transmission);
     double delays[10][2];
     for(int i = 0; i < m-1; i++) {
       delays[i][0] = (double)paths[i][1]/propagation;
