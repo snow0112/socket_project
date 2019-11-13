@@ -56,15 +56,15 @@ int main(){
   	//puts(buffer);
     // calculate delay
     long long size = atoll(filesize);
-    printf("filesize: %s\n",filesize );
-    printf("filesize: %lld\n",size );
+    //printf("filesize: %s\n",filesize );
+    //printf("filesize: %lld\n",size );
     double Tt = ((double)size/transmission)/8.0;
     double delays[10][2];
     for(int i = 0; i < m-1; i++) {
       delays[i][0] = (double)paths[i][1]/propagation;
       delays[i][1] = delays[i][0] + Tt;
     }
-    printf("Tt : %.2f\n", Tt);
+    //printf("Tt : %.2f\n", Tt);
     //for(int i = 0; i < m-1; i++){
     //  printf("%-9d", paths[i][0]);
     //  printf("%f\n",delays[i][0]);
