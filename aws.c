@@ -23,9 +23,9 @@ int main(void)
 	int parent_sockfd, child_sockfd, A_sockfd, B_sockfd;
 	struct sockaddr_in servaddr, clientaddr, A_servaddr, B_servaddr;
 	socklen_t len, A_len, B_len;
-    char buffer[1024]; // for sending result to client
-    //char bufferA[1024]; // for saving the result form server A
-    //char bufferB[1024]; // for saving the result form server B
+    //char buffer[1024]; // for sending result to client
+    //for (int i = 0; i < 1023; i++) buffer[i] = ' ';
+    //buffer[1023] = '\0';
     char mapID[10];
     int source;
     char filesize[1024];
@@ -139,9 +139,21 @@ int main(void)
         printf("%s\n", "----------------------------------------------");
         close(B_sockfd);
 
-        strcpy(buffer, "AWS responding");
-        send(child_sockfd, buffer, strlen(buffer), 0);
+        //strcpy(buffer, "AWS respond" );
+        //int l = sprintf(buffer, "%d\n", m);
+        //send(child_sockfd, buffer, strlen(buffer), 0);
 
+        //int s = 
+        send(child_sockfd, &m, sizeof(int), 0);
+        //printf("sending m :%d, length %d\n", m,s);
+        //s = 
+        send(child_sockfd,&Tt, sizeof(double),0);
+        for(int i = 0; i < m-1; i++){
+            send(child_sockfd, &paths[i][0], sizeof(int), 0);
+            send(child_sockfd, &paths[i][1], sizeof(int), 0);
+            send(child_sockfd, &delays[i][0], sizeof(double), 0);
+            send(child_sockfd, &delays[i][1], sizeof(double), 0);
+        }
         printf("%s\n", "The AWS has sent calculated delay to client using TCP over port 24539.");
         close(child_sockfd);
 
