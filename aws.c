@@ -125,9 +125,9 @@ int main(void)
 
         //recvfrom(B_sockfd, bufferB, sizeof(bufferB), 0, (struct sockaddr*)NULL, NULL); 
         printf("%s\n", "The AWS has received delays from server B:" );
-        printf("%s\n", "--------------------------------------------");
+        printf("%s\n", "----------------------------------------------");
         printf("%s\n", "Destination        Tt        Tp        Delay");
-        printf("%s\n", "--------------------------------------------");
+        printf("%s\n", "----------------------------------------------");
         for(int i = 0; i < m-1; i++){
             printf("%-19d", paths[i][0] );
             printf("%-10.2f",Tt );
@@ -136,12 +136,12 @@ int main(void)
 
         }
         //puts(bufferB); 
-        printf("%s\n", "--------------------------------------------");
+        printf("%s\n", "----------------------------------------------");
         close(B_sockfd);
 
         strcpy(buffer, "AWS responding");
         send(child_sockfd, buffer, strlen(buffer), 0);
-        
+
         printf("%s\n", "The AWS has sent calculated delay to client using TCP over port 24539.");
         close(child_sockfd);
 
