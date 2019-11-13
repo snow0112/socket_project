@@ -64,13 +64,11 @@ int main(){
       delays[i][0] = (double)paths[i][1]/propagation;
       delays[i][1] = delays[i][0] + Tt;
     }
-
     printf("Tt : %.2f\n", Tt);
-
-    for(int i = 0; i < m-1; i++){
-      printf("%-9d", paths[i][0]);
-      printf("%f\n",delays[i][0]);
-    }
+    //for(int i = 0; i < m-1; i++){
+    //  printf("%-9d", paths[i][0]);
+    //  printf("%f\n",delays[i][0]);
+    //}
 
     printf("The Server B has finished the calculation of the delays:\n");
     printf("--------------------------\n");
@@ -82,8 +80,14 @@ int main(){
     }
     printf("--------------------------\n");
 
-    char *message = "Here is B responding";
-    sendto(sockfd, message, 1024, 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+    sendto(sockfd, &Tt, sizeof(double), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+    for(int i = 0; i < m-1; i++){
+      sendto(sockfd, &delays[i][0], sizeof(double), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+      sendto(sockfd, &delays[i][1], sizeof(double), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+    }
+
+    //char *message = "Here is B responding";
+    //sendto(sockfd, message, 1024, 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
     printf("The Server B has finished sending the output to AWS\n");
 
   }

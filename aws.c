@@ -25,7 +25,7 @@ int main(void)
 	socklen_t len, A_len, B_len;
     char buffer[1024]; // for sending result to client
     //char bufferA[1024]; // for saving the result form server A
-    char bufferB[1024]; // for saving the result form server B
+    //char bufferB[1024]; // for saving the result form server B
     char mapID[10];
     int source;
     char filesize[1024];
@@ -115,12 +115,27 @@ int main(void)
         //sendto(B_sockfd, message2, 1000, 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
         printf("%s\n","The AWS has sent path length, propagation speed and transmission speed to server B using UDP over port 22539.");
 
-        recvfrom(B_sockfd, bufferB, sizeof(bufferB), 0, (struct sockaddr*)NULL, NULL); 
+        double Tt;
+        double delays[10][2];
+        recvfrom(B_sockfd, &Tt, sizeof(double), 0, (struct sockaddr*)NULL, NULL);
+        for(int i = 0; i < m-1; i++){
+            recvfrom(B_sockfd, &delays[i][0], sizeof(double), 0, (struct sockaddr*)NULL, NULL);
+            recvfrom(B_sockfd, &delays[i][1], sizeof(double), 0, (struct sockaddr*)NULL, NULL);
+        }
+
+        //recvfrom(B_sockfd, bufferB, sizeof(bufferB), 0, (struct sockaddr*)NULL, NULL); 
         printf("%s\n", "The AWS has received delays from server B:" );
         printf("%s\n", "--------------------------------------------");
         printf("%s\n", "Destination        Tt        Tp        Delay");
         printf("%s\n", "--------------------------------------------");
-        puts(bufferB); 
+        for(int i = 0; i < m-1; i++){
+            printf("%-19d", paths[i][0] );
+            printf("%-10.2f",Tt );
+            printf("%-10.2f",delays[i][0] );
+            printf("%.2f\n",delays[i][1] );
+
+        }
+        //puts(bufferB); 
         printf("%s\n", "--------------------------------------------");
         close(B_sockfd);
 
