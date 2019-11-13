@@ -24,9 +24,9 @@ int main(void)
 	struct sockaddr_in servaddr, clientaddr, A_servaddr, B_servaddr;
 	socklen_t len, A_len, B_len;
     char buffer[1024]; // for sending result to client
-    char bufferA[1024]; // for saving the result form server A
+    //char bufferA[1024]; // for saving the result form server A
     char bufferB[1024]; // for saving the result form server B
-    char mapID[1024];
+    char mapID[10];
     int source, filesize;
 
 	// socket create and verification 
@@ -61,16 +61,34 @@ int main(void)
         A_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
         connect( A_sockfd, (struct sockaddr *) &A_servaddr, sizeof(A_servaddr) );
 
-        sendto(A_sockfd, mapID, 1024, 0, (struct sockaddr*)NULL, sizeof(A_servaddr));
+        sendto(A_sockfd, mapID, sizeof(mapID), 0, (struct sockaddr*)NULL, sizeof(A_servaddr));
         sendto(A_sockfd, &source, sizeof(source), 0, (struct sockaddr*)NULL, sizeof(A_servaddr));
-
         printf("%s\n","The AWS has sent map ID and starting vertex to server A using UDP over port 21539.");
-        recvfrom(A_sockfd, bufferA, sizeof(bufferA), 0, (struct sockaddr*)NULL, NULL); 
+
+        double propagation;
+        double transmission;
+        int m; // vertex number
+        int paths[10][2];
+        recvfrom(A_sockfd, &propagation, sizeof(double), 0, (struct sockaddr*)NULL, NULL);
+        recvfrom(A_sockfd, &transmission, sizeof(double), 0, (struct sockaddr*)NULL, NULL);
+        recvfrom(A_sockfd, &m, sizeof(int), 0, (struct sockaddr*)NULL, NULL);
+        printf("%f\n",propagation );
+        printf("%f\n",transmission );
+        printf("%d\n",m );
+        for(int i = 0; i < m-1; i++){
+            recvfrom(A_sockfd, &paths[i][0], sizeof(int), 0, (struct sockaddr*)NULL, NULL);
+            recvfrom(A_sockfd, &paths[i][1], sizeof(int), 0, (struct sockaddr*)NULL, NULL);
+        }
+        //recvfrom(A_sockfd, bufferA, sizeof(bufferA), 0, (struct sockaddr*)NULL, NULL); 
         printf("%s\n", "The AWS has received shortest path from server A:");
         printf("%s\n", "-----------------------------");
         printf("%s\n", "Destination        Min Length");
         printf("%s\n", "-----------------------------");
-        puts(bufferA); 
+        //puts(bufferA); 
+        for(int i = 0; i < m-1; i++){
+            printf("%-19d", paths[i][0] );
+            printf("%d\n", paths[i][1] );
+        }
         printf("%s\n", "-----------------------------");
         close(A_sockfd);
 

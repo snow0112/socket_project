@@ -222,6 +222,17 @@ int main(){
     }
     printf("%s\n", "-----------------------------");
 
+    sendto(sockfd, &targetmap->propogation, sizeof(double), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+    sendto(sockfd, &targetmap->transmission, sizeof(double), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+    sendto(sockfd, &m, sizeof(int), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+    for(int i = 0; i < m; i++){
+      if (i == sidx) continue;
+      sendto(sockfd, &targetmap->vertrx_sequence[i], sizeof(int), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+      sendto(sockfd, &paths[i], sizeof(int), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+      //recvfrom(A_sockfd, paths[i][0], sizeof(int), 0, (struct sockaddr*)NULL, NULL);
+      //recvfrom(A_sockfd, paths[i][1], sizeof(int), 0, (struct sockaddr*)NULL, NULL);
+    }
+
     char *message = "Here is A responding";
     sendto(sockfd, message, 1024, 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
     printf("%s\n", "The Server A has sent shortest paths to AWS.");
