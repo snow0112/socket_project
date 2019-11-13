@@ -55,10 +55,10 @@ int main(){
     //printf("* Path length for destination %d: %d;\n",0,1);
   	//puts(buffer);
     // calculate delay
-    long size = atol(filesize);
+    long long size = atoll(filesize);
     printf("filesize: %s\n",filesize );
-    printf("filesize: %ld\n",size );
-    double Tt = ((double)0.0/transmission);
+    printf("filesize: %lld\n",size );
+    double Tt = ((double)size/transmission)/8.0;
     double delays[10][2];
     for(int i = 0; i < m-1; i++) {
       delays[i][0] = (double)paths[i][1]/propagation;

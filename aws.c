@@ -141,6 +141,7 @@ int main(void)
 
         strcpy(buffer, "AWS responding");
         send(child_sockfd, buffer, strlen(buffer), 0);
+        
         printf("%s\n", "The AWS has sent calculated delay to client using TCP over port 24539.");
         close(child_sockfd);
 
