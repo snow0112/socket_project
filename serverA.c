@@ -181,14 +181,45 @@ int main(){
       }
     }
     // dijkstra
-    int paths[*(&targetmap->vertex_number)][2]; // destination(index), path length
-
-
-
+    int m = *(&targetmap->vertex_number); // number of vetex
+    int paths[m]; // destination(index), path length
+    int added[m]; // destination(index), index match with adj
+    for (int i = 0; i < m; i++) {
+      paths[i] = -1;
+      added[i] = 0;
+    } // initial condition
+    paths[sidx] = 0;
+    for (int i = 0; i < m; i++){
+      // find next to add
+      int toadd = -1;
+      int min = -1;
+      for (int c = 0; c < m; c++){
+        if (added[c] == 0 && paths[c] != -1 ){
+          if (min == -1 || paths[c] < min){
+            toadd = c;
+            min = paths[c];
+          }
+        }
+      }
+      // updated added and paths after adding toadd
+      added[toadd] = 1;
+      for (int j = 0; j < m; j++){
+        int w = *(&targetmap->adja[toadd][j]);
+        int temp = paths[toadd] + w;
+        if ( w != 0 && (paths[j] == -1 || paths[j] > temp ) ) paths[j] = temp ;
+      }
+    }
+    //for (int i = 0; i < m; i++) printf("%d\n",paths[i]);
+    
     printf("%s\n", "The Server A has identified the following shortest paths:");
     printf("%s\n", "-----------------------------");
     printf("%s\n", "Destination  Min Length");
     printf("%s\n", "-----------------------------");
+    for (int i = 0; i < m; i++){
+      if (i == sidx) continue;
+      printf("%-13d", *(&targetmap->vertrx_sequence[i]));
+      printf("%d\n", paths[i]);
+    }
     printf("%s\n", "-----------------------------");
 
     char *message = "Here is A responding";
