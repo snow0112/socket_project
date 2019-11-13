@@ -18,10 +18,11 @@ int main(int argc, char* argv[])
     printf("The client is up and running.\n");
 
 	// reference : geeksforgeeks TCP Server-Client implementation in C
-	int sockfd, source, filesize;
+	int sockfd, source;
+    long filesize;
 	struct sockaddr_in servaddr;
     source = atoi(argv[2]);
-    filesize = atoi(argv[3]);
+    filesize = atol(argv[3]);
     //printf("%d\n", filesize);
 
 	// socket create and verification 

@@ -27,7 +27,8 @@ int main(void)
     //char bufferA[1024]; // for saving the result form server A
     char bufferB[1024]; // for saving the result form server B
     char mapID[10];
-    int source, filesize;
+    int source;
+    long filesize;
 
 	// socket create and verification 
     parent_sockfd = socket(AF_INET, SOCK_STREAM, 0); 
@@ -45,6 +46,7 @@ int main(void)
     printf("The AWS is up and running.\n"); // only while starting
     while(1){
 
+        // receive from client
     	child_sockfd = accept(parent_sockfd, (struct sockaddr*) &clientaddr, &len);
         recv(child_sockfd, mapID, 1024, 0);
         mapID[1] = '\0';
@@ -52,8 +54,9 @@ int main(void)
         recv(child_sockfd, &filesize, sizeof(filesize), 0);
         printf("The AWS has received map ID %s, ",mapID);
         printf("start vertex %d, ",source);
-        printf("and file size %d from the client using TCP over port 24539.\n", filesize);
+        printf("and file size %ld from the client using TCP over port 24539.\n", filesize);
 
+        // talk to server A
         bzero(&A_servaddr, sizeof(A_servaddr)); 
         A_servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
         A_servaddr.sin_port = htons(PORTA); 
@@ -68,7 +71,8 @@ int main(void)
         double propagation;
         double transmission;
         int m; // vertex number
-        int paths[10][2];
+        int paths[10][5];
+
         recvfrom(A_sockfd, &propagation, sizeof(double), 0, (struct sockaddr*)NULL, NULL);
         recvfrom(A_sockfd, &transmission, sizeof(double), 0, (struct sockaddr*)NULL, NULL);
         recvfrom(A_sockfd, &m, sizeof(int), 0, (struct sockaddr*)NULL, NULL);
@@ -79,12 +83,10 @@ int main(void)
             recvfrom(A_sockfd, &paths[i][0], sizeof(int), 0, (struct sockaddr*)NULL, NULL);
             recvfrom(A_sockfd, &paths[i][1], sizeof(int), 0, (struct sockaddr*)NULL, NULL);
         }
-        //recvfrom(A_sockfd, bufferA, sizeof(bufferA), 0, (struct sockaddr*)NULL, NULL); 
         printf("%s\n", "The AWS has received shortest path from server A:");
         printf("%s\n", "-----------------------------");
         printf("%s\n", "Destination        Min Length");
         printf("%s\n", "-----------------------------");
-        //puts(bufferA); 
         for(int i = 0; i < m-1; i++){
             printf("%-19d", paths[i][0] );
             printf("%d\n", paths[i][1] );
@@ -92,16 +94,27 @@ int main(void)
         printf("%s\n", "-----------------------------");
         close(A_sockfd);
 
+        // talk to server B
         bzero(&B_servaddr, sizeof(B_servaddr)); 
         B_servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
         B_servaddr.sin_port = htons(PORTB); 
         B_servaddr.sin_family = AF_INET;
         B_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+
         connect( B_sockfd, (struct sockaddr *) &B_servaddr, sizeof(B_servaddr) );
-        printf("connect to B\n");
-        char *message2 = "Hi Server B";
-        sendto(B_sockfd, message2, 1000, 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
+        
+        sendto(B_sockfd, &filesize, sizeof(long), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
+        sendto(B_sockfd, &propagation, sizeof(double), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
+        sendto(B_sockfd, &transmission, sizeof(double), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
+        sendto(B_sockfd, &m, sizeof(int), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
+        for(int i = 0; i < m-1; i++){
+            sendto(B_sockfd, &paths[i][0], sizeof(int), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
+            sendto(B_sockfd, &paths[i][1], sizeof(int), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
+        }
+        //char *message2 = "Hi Server B";
+        //sendto(B_sockfd, message2, 1000, 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
         printf("%s\n","The AWS has sent path length, propagation speed and transmission speed to server B using UDP over port 22539.");
+
         recvfrom(B_sockfd, bufferB, sizeof(bufferB), 0, (struct sockaddr*)NULL, NULL); 
         printf("%s\n", "The AWS has received delays from server B:" );
         printf("%s\n", "--------------------------------------------");

@@ -28,22 +28,56 @@ int main(){
   bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
   len = sizeof(clientaddr);
 
-  char buffer[1024];
+  //char buffer[1024];
   while(1){
-  	recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*) &clientaddr, &len);
-  	buffer[1024] = '\0';
+  	//recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*) &clientaddr, &len);
+  	//buffer[1024] = '\0';
+
+    long filesize;
+    double propagation;
+    double transmission;
+    int m; // vertex number
+    int paths[10][2];
+    recvfrom(sockfd, &filesize, sizeof(long), 0, (struct sockaddr*) &clientaddr, &len);
+    recvfrom(sockfd, &propagation, sizeof(double), 0, (struct sockaddr*) &clientaddr, &len);
+    recvfrom(sockfd, &transmission, sizeof(double), 0, (struct sockaddr*) &clientaddr, &len);
+    recvfrom(sockfd, &m, sizeof(int), 0, (struct sockaddr*) &clientaddr, &len);
+    for(int i = 0; i < m-1; i++){
+      recvfrom(sockfd, &paths[i][0], sizeof(int), 0, (struct sockaddr*) &clientaddr, &len);
+      recvfrom(sockfd, &paths[i][1], sizeof(int), 0, (struct sockaddr*) &clientaddr, &len);
+    }
   	printf("The Server B has received data for calculation:\n");
-    printf("* Propagation speed: %.2f km/s; \n", 1.1);
-    printf("* Transmission speed %.2f Bytes/s; \n", 2.2 );
-    printf("* Path length for destination %d: %d;\n",0,1);
-  	puts(buffer);
+    printf("* Propagation speed: %.2f km/s; \n", propagation);
+    printf("* Transmission speed %.2f Bytes/s; \n", transmission );
+    for(int i = 0; i < m-1; i++){
+      printf("* Path length for destination %d: %d;\n",paths[i][0],paths[i][1]);
+    }
+    //printf("* Path length for destination %d: %d;\n",0,1);
+  	//puts(buffer);
     // calculate delay
+    double Tt = ((double)filesize/transmission);
+    double delays[10][2];
+    for(int i = 0; i < m-1; i++) {
+      delays[i][0] = (double)paths[i][1]/propagation;
+      delays[i][1] = delays[i][0] + Tt;
+    }
+
+    printf("Tt : %.2f\n", Tt);
+
+    for(int i = 0; i < m-1; i++){
+      printf("%-9d", paths[i][0]);
+      printf("%f\n",delays[i][0]);
+    }
 
     printf("The Server B has finished the calculation of the delays:\n");
-    printf("------------------------\n");
+    printf("--------------------------\n");
     printf("Destination        Delay\n");
-    printf("------------------------\n");
-    printf("------------------------\n");
+    printf("--------------------------\n");
+    for(int i = 0; i < m-1; i++){
+      printf("%-19d", paths[i][0]);
+      printf("%.2f\n",delays[i][1]);
+    }
+    printf("--------------------------\n");
 
     char *message = "Here is B responding";
     sendto(sockfd, message, 1024, 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
