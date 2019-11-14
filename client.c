@@ -23,6 +23,10 @@ int main(int argc, char* argv[])
     source = atoi(argv[2]);
     char filesize[1024];
     strcpy(filesize, argv[3]);
+	char mapID[10];
+	strcpy(mapID, argv[1]);
+	mapID[1] = '\0';
+
 
 	// socket create and verification 
     sockfd = socket(AF_INET, SOCK_STREAM, 0); 
@@ -41,8 +45,9 @@ int main(int argc, char* argv[])
     }
 
     // send request to aws
-    send(sockfd, argv[1], strlen(argv[1]), 0);
-    send(sockfd, &source, sizeof(int), 0);
+    send(sockfd, &mapID[0], sizeof(char), 0);
+    int test1 = send(sockfd, &source, sizeof(int), 0);
+	printf("%d\n",test1);
     send(sockfd, filesize, sizeof(filesize), 0);
 
     printf("The client has sent query to AWS using TCP over port 24539; ");
