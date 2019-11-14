@@ -52,7 +52,6 @@ int main(){
   printf("%s\n","The Server A is up and running using UDP on port 21539" );
 
   // read file
-
   int mapcount = 0;
   Node maps[100];
   initNode(&maps[0]);
@@ -93,10 +92,7 @@ int main(){
       int idx2 = 9;
       for(int i = 0; i < 10; i++){
         if ( (*(&iter.m->vertrx_sequence[i])) == -1 || (*(&iter.m->vertrx_sequence[i])) == v1 ){
-          if ( (*(&iter.m->vertrx_sequence[i])) == -1 ) {
-            //printf("add vertex, %d\n",v1 );
-            (*(&iter.m->vertex_number))++;
-          }
+          if ( (*(&iter.m->vertrx_sequence[i])) == -1 ) (*(&iter.m->vertex_number))++;
           (*(&iter.m->vertrx_sequence[i])) = v1;
           idx1 = i;
           break;
@@ -104,10 +100,7 @@ int main(){
       }
       for(int i = 0; i < 10; i++){
         if ( (*(&iter.m->vertrx_sequence[i])) == -1 || (*(&iter.m->vertrx_sequence[i])) == v2 ){
-          if ( (*(&iter.m->vertrx_sequence[i])) == -1 ) {
-            //printf("add vertex, %d\n",v2 );
-            (*(&iter.m->vertex_number))++;
-          }
+          if ( (*(&iter.m->vertrx_sequence[i])) == -1 ) (*(&iter.m->vertex_number))++;
           (*(&iter.m->vertrx_sequence[i])) = v2;
           idx2 = i;
           break;
@@ -161,22 +154,16 @@ int main(){
     // find map
     for (int i = 0; i < mapcount; i++){
       iter = maps[i];
-      //printf("%s\n",mapID );
-      //printf("%s\n",*(&iter.m->mapID) );
       if (mapID[0] == *(&iter.m->mapID)[0]){
-        //printf("got map %s\n",mapID);
         targetmap = *(&iter.m);
-        //printf("%s\n",*(&targetmap->mapID) );
         break;
       }
     }
     // find source index
     int sidx = -1;
     for (int i = 0; i < *(&targetmap->vertex_number); i++){
-      //printf("%d,%d\n", i, *(&targetmap->vertrx_sequence[i] ) );
       if ( *(&targetmap->vertrx_sequence[i]) == source ){
         sidx = i;
-        //printf("%d\n",sidx );
         break;
       }
     }
@@ -209,7 +196,6 @@ int main(){
         if ( w != 0 && (paths[j] == -1 || paths[j] > temp ) ) paths[j] = temp ;
       }
     }
-    //for (int i = 0; i < m; i++) printf("%d\n",paths[i]);
     
     printf("%s\n", "The Server A has identified the following shortest paths:");
     printf("%s\n", "-----------------------------");

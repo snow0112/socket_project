@@ -28,10 +28,7 @@ int main(){
   bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
   len = sizeof(clientaddr);
 
-  //char buffer[1024];
   while(1){
-  	//recvfrom(sockfd, buffer, 1024, 0, (struct sockaddr*) &clientaddr, &len);
-  	//buffer[1024] = '\0';
 
     char filesize[1024];
     double propagation;
@@ -52,24 +49,16 @@ int main(){
     for(int i = 0; i < m-1; i++){
       printf("* Path length for destination %d: %d;\n",paths[i][0],paths[i][1]);
     }
-    //printf("* Path length for destination %d: %d;\n",0,1);
-  	//puts(buffer);
-    // calculate delay
+
+    // calculate
     long long size = atoll(filesize);
-    //printf("filesize: %s\n",filesize );
-    //printf("filesize: %lld\n",size );
     double Tt = ((double)size/transmission)/8.0;
     double delays[10][2];
     for(int i = 0; i < m-1; i++) {
       delays[i][0] = (double)paths[i][1]/propagation;
       delays[i][1] = delays[i][0] + Tt;
     }
-    //printf("Tt : %.2f\n", Tt);
-    //for(int i = 0; i < m-1; i++){
-    //  printf("%-9d", paths[i][0]);
-    //  printf("%f\n",delays[i][0]);
-    //}
-
+    
     printf("The Server B has finished the calculation of the delays:\n");
     printf("--------------------------\n");
     printf("Destination        Delay\n");
@@ -80,14 +69,12 @@ int main(){
     }
     printf("--------------------------\n");
 
+    // send result to aws
     sendto(sockfd, &Tt, sizeof(double), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
     for(int i = 0; i < m-1; i++){
       sendto(sockfd, &delays[i][0], sizeof(double), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
       sendto(sockfd, &delays[i][1], sizeof(double), 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
     }
-
-    //char *message = "Here is B responding";
-    //sendto(sockfd, message, 1024, 0, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
     printf("The Server B has finished sending the output to AWS\n");
 
   }

@@ -23,9 +23,6 @@ int main(void)
 	int parent_sockfd, child_sockfd, A_sockfd, B_sockfd;
 	struct sockaddr_in servaddr, clientaddr, A_servaddr, B_servaddr;
 	socklen_t len, A_len, B_len;
-    //char buffer[1024]; // for sending result to client
-    //for (int i = 0; i < 1023; i++) buffer[i] = ' ';
-    //buffer[1023] = '\0';
     char mapID[10];
     int source;
     char filesize[1024];
@@ -41,7 +38,6 @@ int main(void)
     servaddr.sin_port = htons(PORT); 
 
     int bd = bind(parent_sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-    //printf("[+]Bind to Port number %d.\n", PORT);
     listen(parent_sockfd, 3);
     printf("The AWS is up and running.\n"); // only while starting
     while(1){
@@ -76,9 +72,6 @@ int main(void)
         recvfrom(A_sockfd, &propagation, sizeof(double), 0, (struct sockaddr*)NULL, NULL);
         recvfrom(A_sockfd, &transmission, sizeof(double), 0, (struct sockaddr*)NULL, NULL);
         recvfrom(A_sockfd, &m, sizeof(int), 0, (struct sockaddr*)NULL, NULL);
-        //printf("%f\n",propagation );
-        //printf("%f\n",transmission );
-        //printf("%d\n",m );
         for(int i = 0; i < m-1; i++){
             recvfrom(A_sockfd, &paths[i][0], sizeof(int), 0, (struct sockaddr*)NULL, NULL);
             recvfrom(A_sockfd, &paths[i][1], sizeof(int), 0, (struct sockaddr*)NULL, NULL);
@@ -111,8 +104,6 @@ int main(void)
             sendto(B_sockfd, &paths[i][0], sizeof(int), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
             sendto(B_sockfd, &paths[i][1], sizeof(int), 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
         }
-        //char *message2 = "Hi Server B";
-        //sendto(B_sockfd, message2, 1000, 0, (struct sockaddr*)NULL, sizeof(B_servaddr));
         printf("%s\n","The AWS has sent path length, propagation speed and transmission speed to server B using UDP over port 22539.");
 
         double Tt;
@@ -123,7 +114,6 @@ int main(void)
             recvfrom(B_sockfd, &delays[i][1], sizeof(double), 0, (struct sockaddr*)NULL, NULL);
         }
 
-        //recvfrom(B_sockfd, bufferB, sizeof(bufferB), 0, (struct sockaddr*)NULL, NULL); 
         printf("%s\n", "The AWS has received delays from server B:" );
         printf("%s\n", "----------------------------------------------");
         printf("%s\n", "Destination        Tt        Tp        Delay");
@@ -133,20 +123,12 @@ int main(void)
             printf("%-10.2f",Tt );
             printf("%-10.2f",delays[i][0] );
             printf("%.2f\n",delays[i][1] );
-
         }
-        //puts(bufferB); 
         printf("%s\n", "----------------------------------------------");
         close(B_sockfd);
 
-        //strcpy(buffer, "AWS respond" );
-        //int l = sprintf(buffer, "%d\n", m);
-        //send(child_sockfd, buffer, strlen(buffer), 0);
-
-        //int s = 
+        // send the result back to client
         send(child_sockfd, &m, sizeof(int), 0);
-        //printf("sending m :%d, length %d\n", m,s);
-        //s = 
         send(child_sockfd,&Tt, sizeof(double),0);
         for(int i = 0; i < m-1; i++){
             send(child_sockfd, &paths[i][0], sizeof(int), 0);
@@ -156,7 +138,5 @@ int main(void)
         }
         printf("%s\n", "The AWS has sent calculated delay to client using TCP over port 24539.");
         close(child_sockfd);
-
     }
-	
 }

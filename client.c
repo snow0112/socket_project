@@ -19,11 +19,8 @@ int main(int argc, char* argv[])
 
 	// reference : geeksforgeeks TCP Server-Client implementation in C
 	int sockfd, source;
-    //char filesize[1024];
 	struct sockaddr_in servaddr;
     source = atoi(argv[2]);
-    //filesize = atol(argv[3]);
-    //printf("%d\n", filesize);
     char filesize[1024];
     strcpy(filesize, argv[3]);
 
@@ -42,6 +39,8 @@ int main(int argc, char* argv[])
         printf("connection fail\n");
         exit(0); 
     }
+
+    // send request to aws
     send(sockfd, argv[1], strlen(argv[1]), 0);
     send(sockfd, &source, sizeof(int), 0);
     send(sockfd, filesize, sizeof(filesize), 0);
@@ -51,28 +50,11 @@ int main(int argc, char* argv[])
     printf("map %s; ",argv[1]);
     printf("file size %s.\n", argv[3]);
 
-    char buffer[1024];
-    //recv(sockfd, buffer, 1024, 0);
-
+    // receive result form aws and print out
     int m = 0;
     double Tt = 0.0;
     recv(sockfd, &m, sizeof(int), 0);
-    //printf("get m:%d, Length %d\n", m, r); 
     recv(sockfd, &Tt, sizeof(double), 0);
-    //printf("%f, %d\n",Tt, r );
-
-    /*
-
-    int paths[10][2];
-    double delays[10][2];
-    for(int i = 0; i < m-1; i++){
-        recv(sockfd, &paths[i][0], sizeof(int), 0);
-        recv(sockfd, &paths[i][1], sizeof(int), 0);
-        recv(sockfd, &delays[i][0], sizeof(double), 0);
-        recv(sockfd, &delays[i][1], sizeof(double), 0);
-        //printf("%d,%d,%.2f,%.2f\n",paths[i][0],paths[i][1],delays[i][0],delays[i][1]);
-    }*/
-
     int destination, pathlen;
     double Tp, delay;
     printf("The client has received results from AWS:\n");
@@ -90,9 +72,6 @@ int main(int argc, char* argv[])
         printf("%-8.2f",Tp );
         printf("%.2f\n",delay );
     }
-    //puts(buffer);
     printf("%s\n","----------------------------------------------------");
     close(sockfd); 
-
-	
 }
