@@ -120,8 +120,8 @@ int main(void)
         printf("%s\n", "----------------------------------------------");
         for(int i = 0; i < m-1; i++){
             printf("%-19d", paths[i][0] );
-            printf("%-10.2f",Tt );
-            printf("%-10.2f",delays[i][0] );
+            printf("%-9.2f ",Tt );
+            printf("%-9.2f ",delays[i][0] );
             printf("%.2f\n",delays[i][1] );
         }
         printf("%s\n", "----------------------------------------------");

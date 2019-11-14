@@ -68,8 +68,8 @@ int main(int argc, char* argv[])
         recv(sockfd, &delay, sizeof(double), 0);
         printf("%-15d",destination);
         printf("%-14d",pathlen );
-        printf("%-8.2f",Tt );
-        printf("%-8.2f",Tp );
+        printf("%-7.2f ",Tt );
+        printf("%-7.2f ",Tp );
         printf("%.2f\n",delay );
     }
     printf("%s\n","----------------------------------------------------");
